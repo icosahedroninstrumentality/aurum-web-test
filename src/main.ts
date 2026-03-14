@@ -7,13 +7,7 @@ import { Shader } from "./shader";
 import squircle from "./squircle";
 import Widget from "./widget";
 
-//const wallpaper = await loadTexture("/Wallpaper/Crystal/Purple/image.jpg");
-//const wallpaper = await loadTexture("/image copy.png");
-//const wallpaper = await loadTexture("/Wallpaper/Gold/Chunks/image.jpg");
 const wallpaper = await loadTexture("/Wallpaper/Glass/Color/image.jpg");
-//const wallpaper = await loadTexture("/noirlab2521ai.png");
-//const wallpaper = await loadTexture("/Wallpaper/Tahoe/26-Tahoe-Beach-Dawn.png");
-//const wallpaper = await loadTexture("/board.jpg");
 const m = 16;
 const widget = new Widget();
 
