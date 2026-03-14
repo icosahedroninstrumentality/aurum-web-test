@@ -1,0 +1,20 @@
+{
+  "name": "aurum-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  },
+  "dependencies": {
+    "three": "^0.183.1",
+    "three-text": "^0.4.11",
+    "troika-three-text": "^0.52.4"
+  }
+}
