@@ -14,6 +14,8 @@ Here's a demo of the same shader code running on a Motorola Moto E32s at vsync w
   <source src="./public/demo-e32s.mp4" type="video/mp4">
 </video>
 
+<a href="./public/demo-e32s.mp4">Direct link in case the video does not render</a>
+
 ---
 
 <p style="text-align: center;"><center>
