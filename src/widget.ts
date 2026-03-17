@@ -1,4 +1,4 @@
-import { black, blank, dark, glassAlbedo, glassEmission, green, mix, orange, red, white, yellow } from "./colors";
+import { black, blank, dark, glassAlbedo, glassEmission, green, mix, orange, red, white } from "./colors";
 import glass from "./glass";
 import { Pointer } from "./input";
 import none from "./none";
