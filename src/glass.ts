@@ -73,12 +73,12 @@ void main () {
 
 	float radiusfix = max(1.0, 1.5 * log(radius)); // fix for large radius object
 
-	float curvature = pow(r_, 2.0);
+	float curvature = pow(r_, 2.0 + 1.0 / power + length(1.0 / rect.zw));
 
 	vec2 offset = dir_ * curvature // curve function
 	/ resolution.xy * 16.0 // CHILL OUT
 	* radiusfix;
-
+	
 	vec4 refracted = vec4(0.0);
 	vec4 reflected = vec4(0.0);
 	
