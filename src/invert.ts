@@ -35,8 +35,8 @@ void main() {
 	float mask = smoothstep(0.0, 1.0, max(0.0, 1.0 - pow(inside, radius / 2.0)));
 
 	vec4 back = vec4(1.0) - texture(tex, gl_FragCoord.xy / resolution.xy);
+	back.a = 1.0 - back.a;
 	finalColor = mix(back * bg_albedo + bg_emission, back * fg_albedo + fg_emission, mask);
-	finalColor.a = 1.0;
 }`;
 
 const shader = new Shader(fs, {
