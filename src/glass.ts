@@ -51,8 +51,15 @@ float calculateInside (vec2 Sposition, vec4 Srect, vec2 Sc, float Spower) {
 void main() {
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
 	uv = clamp(uv, 0.0, 1.0);
+	
+	if (gl_FragCoord.x < rect.x) { finalColor = texture(back, uv); return;}
+	if (gl_FragCoord.y < rect.y) { finalColor = texture(back, uv); return;}
+	if (gl_FragCoord.x > rect.x + rect.z) { finalColor = texture(back, uv); return;}
+	if (gl_FragCoord.y > rect.y + rect.w) { finalColor = texture(back, uv); return;}
 
 	float inside = calculateInside(gl_FragCoord.xy, rect, c, power);
+	
+	if (inside > 1.0) { finalColor = texture(back, uv); return;}
 
 	float mask =	smoothstep(0.0, 1.0, max(0.0, 1.0 - pow(inside, radius / 2.0)));
 	float invMask = smoothstep(1.0, 0.0, max(0.0, 1.0 - pow(inside, radius / 32.0)));
