@@ -78,8 +78,6 @@ void main () {
 	vec2 offset = dir_ * curvature // curve function
 	/ resolution.xy * 16.0 // CHILL OUT
 	* radiusfix;
-	
-	//offset.y *= 1.5; // fighing some stupid bug
 
 	vec4 refracted = vec4(0.0);
 	vec4 reflected = vec4(0.0);
