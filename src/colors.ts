@@ -3,6 +3,7 @@ import type { RGBA } from "./types";
 export const blank: RGBA = [0, 0, 0, 0];
 
 export const black: RGBA = [0, 0, 0, 1];
+export const gray: RGBA = [0.5, 0.5, 0.5, 1];
 export const white: RGBA = [1, 1, 1, 1];
 
 export const dark: RGBA = [0.1,0.1,0.1,1];
