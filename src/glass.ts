@@ -78,9 +78,6 @@ void main() {
 		1.0 / power
 	);
 
-	vec4 refracted = vec4(0.0);
-	vec4 reflected = vec4(0.0);
-
 	float insideC = calculateInside(gl_FragCoord.xy, rect, c, power);
 	float insideX = calculateInside(gl_FragCoord.xy + vec2(1.0,0.0), rect, c, power);
 	float insideY = calculateInside(gl_FragCoord.xy + vec2(0.0,1.0), rect, c, power);
@@ -91,29 +88,36 @@ void main() {
 
 	float radiusfix = max(1.0, 1.5 * log(radius)); // fix for large radius object
 
-	vec2 offset =
-	dir_ * pow(r_, 2.0) // curve function
+	float curvature = pow(r_, 2.0);
+
+	vec2 offset = dir_ * curvature // curve function
 	* 0.005 // CHILL OUT
 	* radiusfix;
 	
 	offset.y *= 1.5; // fighing some stupid bug
 
+	vec4 refracted = vec4(0.0);
+	vec4 reflected = vec4(0.0);
+	
 	refracted.r = safeSample(blur, uv - offset * 0.9).r;
 	refracted.g = safeSample(blur, uv - offset).g;
 	refracted.b = safeSample(blur, uv - offset * 1.1).b;
 	
+	reflected.r = safeSample(blur, uv + offset * 0.3 * 0.9).r;
+	reflected.g = safeSample(blur, uv + offset * 0.3).g;
+	reflected.b = safeSample(blur, uv + offset * 0.3 * 1.1).b;
+	
 	refracted.a = 1.0;
 
-float curvature = pow(r_, 2.0);
-vec2 sheenDir = vec2(sin(sheenRot), cos(sheenRot));
-float streak = abs(dot(dir_, sheenDir));
+	vec2 sheenDir = vec2(sin(sheenRot), cos(sheenRot));
+	float streak = abs(dot(dir_, sheenDir));
 
-float sheenMask =
-    curvature *
-    streak *
-    pow(invMask, 6.0);
+	float sheenMask =
+		curvature *
+		streak *
+		pow(invMask, 6.0);
 
-	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
+	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * sheenMask + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
 }`;
 
 const shader = new Shader(fragmentSource, {
@@ -166,7 +170,7 @@ export default function glass (
 		radius / (rect[2] * 0.5),
 		radius / (rect[3] * 0.5)
 	] as Vec2;
-	const pad = [64, 64] as Vec2;
+	const pad = [32, 32] as Vec2;
 	const padded: Rect = [
 		Math.min(Shader.canvas.width, (Math.max(0, rect[0] - pad[0]))),
 		Math.min(Shader.canvas.height, (Math.max(0, rect[1] - pad[1]))),
