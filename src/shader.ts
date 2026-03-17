@@ -113,6 +113,7 @@ export class Shader<U extends Record<string, UniformType>> {
 	})!;
 	
 	public static readonly screen = Shader.createTexture();
+	public static readonly bs = Shader.createTexture();
 	public static readonly none = Shader.createTexture();
 	public static readonly fullscreen: Rect = [0, 0, Shader.canvas.width, Shader.canvas.height];
 	
