@@ -14,7 +14,6 @@ uniform vec2 resolution;
 uniform vec4 rect;
 
 uniform vec2 c;
-uniform float px;
 uniform float sheenRot;
 uniform float radius;
 uniform float power;
@@ -77,10 +76,10 @@ void main () {
 	float curvature = pow(r_, 2.0);
 
 	vec2 offset = dir_ * curvature // curve function
-	* 0.005 // CHILL OUT
+	/ resolution.xy * 16.0 // CHILL OUT
 	* radiusfix;
 	
-	offset.y *= 1.5; // fighing some stupid bug
+	//offset.y *= 1.5; // fighing some stupid bug
 
 	vec4 refracted = vec4(0.0);
 	vec4 reflected = vec4(0.0);
@@ -103,7 +102,7 @@ void main () {
 		streak *
 		pow(invMask, 6.0);
 
-	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * pow(invMask, 2.0) * albedo + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
+	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * curvature + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
 }`;
 
 const shader = new Shader(fragmentSource, {
@@ -179,7 +178,6 @@ export default function glass (
 		shader.uniform.blur.set(a);
 	}
 	shader.uniform.back.set(b);
-	//shader.uniform.px.set((1.0 / Math.sqrt(Shader.canvas.width ** 2 + Shader.canvas.height ** 2)));
 	shader.uniform.radius.set(radius);
 	shader.uniform.power.set(power);
 	shader.uniform.albedo.set(albedo);
