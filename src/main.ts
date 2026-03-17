@@ -4,10 +4,11 @@ import { Pointer } from "./input";
 import { loadTexture } from "./loadTexture";
 import none from "./none";
 import { Shader } from "./shader";
+import shadowBlur from "./shadowBlut";
 import squircle from "./squircle";
 import Widget from "./widget";
 
-const wallpaper = await loadTexture("/Wallpaper/Glass/Color/image.jpg");
+const wallpaper = await loadTexture("/Wallpaper/Gold/Chunks/image.jpg");
 const m = 16;
 const widget = new Widget();
 
@@ -67,21 +68,30 @@ function animate () {
 		Shader.clear(Shader.screen); // Keep the GPU minimally busy so there's no spinup on change
 		return requestAnimationFrame(animate);
 	}
-	shouldDraw = true;
+	shouldDraw = false;
 	Shader.clear(Shader.screen);
+	Shader.clear(Shader.bs);
 
 	//wallpaper
-	//squircle(Shader.fullscreen, 64, 3, white, blank, blank, blank, wallpaper, Shader.screen);
 	none(Shader.fullscreen, wallpaper, Shader.screen, true);
+	
+	
+	// bar
+	none([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], Shader.screen, Shader.bs);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, 0, Shader.bs, Shader.screen);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, Math.PI / 3, Shader.screen, Shader.bs);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, Math.PI / 3 * 2, Shader.bs, Shader.screen);
 	
 	// window
 	widget.draw();
 	glass([500, 300, 200, 200], 100, 2);
-	// stuff
-	drawBar(96 * Math.pow(0.5 + 0.5 * Math.sin(Date.now() / 1000), 10));
+	
+	// bar
+	drawBar(0);
+
+	// dock
 	drawDock();
-	
-	
+
 	// mouse
 	//squircle([Pointer.position[0] - 12, Pointer.position[1] - 12, 24, 24], 12, 2, blank, white, white, blank);
 	//squircle([Pointer.position[0] - 8, Pointer.position[1] - 8, 16, 16], 8, 2, blank, white, white, blank);
@@ -89,8 +99,6 @@ function animate () {
 	glass([Pointer.position[0] - 16, Pointer.position[1] - 16, 32, 32], 16, 2, glassAlbedo, mix(white, glassEmission, 0.5));
 	//glass([Pointer.position[0] - 32, Pointer.position[1] - 32, 64, 64], 32, 2);
 	
-	// glass-overlay
-	glass([0, Pointer.position[1], Shader.fullscreen[2], Shader.fullscreen[3]], 64, 3, white, blank, Shader.screen, Shader.screen, 0);
 	// draw screen
 	squircle(Shader.fullscreen, 64, 3, white, blank, blank, blank, Shader.screen, null);
 	fps++;
