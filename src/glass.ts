@@ -89,7 +89,7 @@ void main() {
 	* 0.005 // CHILL OUT
 	* radiusfix;
 	
-	offset.y *= 1.2; // fighing some stupid bug
+	offset.y *= 1.5; // fighing some stupid bug
 
 	refracted.r = safeSample(blur, uv - offset * 0.9).r;
 	refracted.g = safeSample(blur, uv - offset).g;
