@@ -40,23 +40,23 @@ void main() {
 	float mask = pow(max(0.0, min(1.0, 1.0 - inside)), 4.0);
 	vec4 back = texture(tex, gl_FragCoord.xy / resolution.xy);
 	vec4 blurred = vec4(0.0);
-	int nSamples = int(clamp(radius * 0.5, 1.0, float(MAX_SAMPLES)));
+	int nSamples = int(clamp((radius*mask) * 0.5, 1.0, float(MAX_SAMPLES)));
 	vec2 dir = vec2(cos(angle), sin(angle));
 
 	for (int i = 0; i < MAX_SAMPLES; i++) {
 		if (i >= nSamples) break;
 
 		float t = (float(i) + 0.5) / float(nSamples);
-		float currentRadius = radius * (1.0 - t);
+		float currentRadius = radius * mask * (1.0 - t);
 		vec2 offset = dir * px * currentRadius;
 
-		blurred += safeSample(tex, clamp(uv + offset, 0.0, 1.0));
-		blurred += safeSample(tex, clamp(uv - offset, 0.0, 1.0));
+		blurred += safeSample(tex, uv + offset);
+		blurred += safeSample(tex, uv - offset);
 	}
 
 	blurred = blurred / float(nSamples * 2);
 
-	finalColor = mix(back, blurred, mask);
+	finalColor = blurred;
 }`;
 
 const shader = new Shader(fs, {
