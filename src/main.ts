@@ -94,11 +94,8 @@ function animate () {
 	drawDock();
 
 	// mouse
-	//squircle([Pointer.position[0] - 12, Pointer.position[1] - 12, 24, 24], 12, 2, blank, white, white, blank);
-	//squircle([Pointer.position[0] - 8, Pointer.position[1] - 8, 16, 16], 8, 2, blank, white, white, blank);
 	glass([Pointer.position[0] - 24, Pointer.position[1] - 24, 48, 48], 24, 2, mix(glassAlbedo, black, 0.5), glassEmission);
 	glass([Pointer.position[0] - 16, Pointer.position[1] - 16, 32, 32], 16, 2, glassAlbedo, mix(white, glassEmission, 0.5));
-	//glass([Pointer.position[0] - 32, Pointer.position[1] - 32, 64, 64], 32, 2);
 	
 	// draw screen
 	squircle(Shader.fullscreen, 64, 3, white, blank, blank, blank, Shader.screen, null);
