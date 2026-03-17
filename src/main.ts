@@ -79,9 +79,9 @@ function animate () {
 	
 	// bar
 	none([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], Shader.screen, Shader.bs);
-	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, 0, Shader.bs, Shader.screen);
-	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, Math.PI / 3, Shader.screen, Shader.bs);
-	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 2, 64, Math.PI / 3 * 2, Shader.bs, Shader.screen);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 1, 32, 0, Shader.bs, Shader.screen);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 1, 32, Math.PI / 3, Shader.screen, Shader.bs);
+	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 1, 32, Math.PI * 2 / 3, Shader.bs, Shader.screen);
 	
 	// window
 	widget.draw();
