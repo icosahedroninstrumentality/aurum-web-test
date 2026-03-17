@@ -117,7 +117,7 @@ void main() {
 		streak *
 		pow(invMask, 6.0);
 
-	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * pow(invMask, 6.0) + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
+	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * pow(invMask, 6.0) * albedo + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
 }`;
 
 const shader = new Shader(fragmentSource, {
