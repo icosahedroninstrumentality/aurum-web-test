@@ -48,7 +48,7 @@ float calculateInside (vec2 Sposition, vec4 Srect, vec2 Sc, float Spower) {
 	return pow(abs(max(abs((2.0 * Sposition.x - (2.0 * Srect.x + Srect.z)) / Srect.z) - (1.0 - Sc.x), 0.0) / Sc.x), Spower) + pow(abs(max(abs((2.0 * Sposition.y - (2.0 * Srect.y + Srect.w)) / Srect.w) - (1.0 - Sc.y), 0.0) / Sc.y), Spower);
 }
 
-void main() {
+void main () {
 	vec2 uv = gl_FragCoord.xy / resolution.xy;
 	uv = clamp(uv, 0.0, 1.0);
 	
@@ -63,20 +63,6 @@ void main() {
 
 	float mask =	smoothstep(0.0, 1.0, max(0.0, 1.0 - pow(inside, radius / 2.0)));
 	float invMask = smoothstep(1.0, 0.0, max(0.0, 1.0 - pow(inside, radius / 32.0)));
-	float fix = (max(16.0, radius) / 128.0);
-
-	vec2 halfSize = rect.zw * 0.5;
-	float scale = min(halfSize.x, halfSize.y);
-	vec2 p = gl_FragCoord.xy;
-	vec2 rc = vec2(rect.x + rect.z * 0.5, rect.y + rect.w * 0.5);
-	vec2 aspect = halfSize / scale;
-	vec2 local = (p - rc) / scale;
-	vec2 shaped = local / aspect;
-	vec2 rectCenter = normalize(shaped) * pow(
-		pow(abs(shaped.x), power) +
-		pow(abs(shaped.y), power),
-		1.0 / power
-	);
 
 	float insideC = calculateInside(gl_FragCoord.xy, rect, c, power);
 	float insideX = calculateInside(gl_FragCoord.xy + vec2(1.0,0.0), rect, c, power);
@@ -99,13 +85,13 @@ void main() {
 	vec4 refracted = vec4(0.0);
 	vec4 reflected = vec4(0.0);
 	
-	refracted.r = safeSample(blur, uv - offset * 0.9).r;
+	refracted.r = safeSample(blur, uv - offset / 1.1).r;
 	refracted.g = safeSample(blur, uv - offset).g;
 	refracted.b = safeSample(blur, uv - offset * 1.1).b;
 	
-	reflected.r = safeSample(blur, uv + offset * 0.3 * 0.9).r;
-	reflected.g = safeSample(blur, uv + offset * 0.3).g;
-	reflected.b = safeSample(blur, uv + offset * 0.3 * 1.1).b;
+	reflected.r = safeSample(blur, uv + offset * 0.2 / 1.2).r;
+	reflected.g = safeSample(blur, uv + offset * 0.2).g;
+	reflected.b = safeSample(blur, uv + offset * 0.2 * 1.2).b;
 	
 	refracted.a = 1.0;
 
@@ -117,7 +103,7 @@ void main() {
 		streak *
 		pow(invMask, 6.0);
 
-	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * pow(invMask, 6.0) * albedo + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
+	finalColor = mix(safeSample(back, uv), (refracted * albedo + reflected * pow(invMask, 2.0) * albedo + emission) + vec4(sheenColor * sheenMask, 0.0), mask);
 }`;
 
 const shader = new Shader(fragmentSource, {
@@ -201,7 +187,7 @@ export default function glass (
 	shader.uniform.c.set(c);
 	shader.uniform.sheenRot.set(Math.PI * 0.75);
 	const h = rgbToHue(emission[0], emission[1], emission[2]);
-	const sheenRGB = hslToRgb(h, 0.75, 0.75);
+	const sheenRGB = hslToRgb(h, 0.5, 0.75);
 	shader.uniform.sheenColor.set(sheenRGB);
 	if (to) shader.renderToTexture(to, rect); else shader.draw(rect);
 }
