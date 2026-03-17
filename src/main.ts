@@ -8,7 +8,8 @@ import shadowBlur from "./shadowBlut";
 import squircle from "./squircle";
 import Widget from "./widget";
 
-const wallpaper = await loadTexture("/Wallpaper/Gold/Chunks/image.jpg");
+const wallpaper = await loadTexture("/Wallpaper/Gold/Flat/image.jpg");
+
 const m = 16;
 const widget = new Widget();
 
