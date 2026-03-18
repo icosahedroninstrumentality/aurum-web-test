@@ -73,7 +73,7 @@ void main () {
 
 	float radiusfix = max(1.0, 1.5 * log(radius)); // fix for large radius object
 
-	float curvature = pow(r_, 2.0 + 1.0 / power + length(1.0 / rect.zw));
+	float curvature = pow(r_, 4.0 + 1.0 / power + 300.0 * min(1.0 / rect.z, 1.0 / rect.w));
 
 	vec2 offset = dir_ * curvature // curve function
 	/ resolution.xy * 16.0 // CHILL OUT
