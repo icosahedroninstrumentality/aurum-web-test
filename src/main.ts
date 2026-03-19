@@ -151,7 +151,6 @@ function animate () {
 	//wallpaper
 	none(Shader.fullscreen, wallpaper, Shader.screen, false);
 	
-	
 	// bar
 	none([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], Shader.screen, Shader.bs);
 	shadowBlur([-128, Shader.canvas.height - 128, Shader.fullscreen[2] + 256, 256], 128, 1, 32, 0, Shader.bs, Shader.screen);
@@ -161,7 +160,6 @@ function animate () {
 	// window
 	widget.draw();
 	glass([500, 300, 200, 200], 100, 2);
-	glass([500, 300, 1000, 1000], 500, 2);
 	
 	// bar
 	drawBar(0);
