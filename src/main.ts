@@ -1,4 +1,4 @@
-import { black, blank, glassAlbedo, glassEmission, mix, white } from "./colors";
+import { black, blank, glassAlbedo, glassEmission, green, lightGray, mix, white } from "./colors";
 import glass from "./glass";
 import { Pointer } from "./input";
 import { loadTexture } from "./loadTexture";
@@ -6,9 +6,10 @@ import none from "./none";
 import { Shader } from "./shader";
 import shadowBlur from "./shadowBlut";
 import squircle from "./squircle";
+import type { Rect, RGBA, Vec2 } from "./types";
 import Widget from "./widget";
 
-const wallpaper = await loadTexture("/Wallpaper/Gold/Flat/image.jpg");
+const wallpaper = await loadTexture("/Wallpaper/Gold/Chunks/image.jpg");
 
 const m = 16;
 const widget = new Widget();
@@ -64,6 +65,80 @@ function drawBar (yOffset: number = 0) {
 	for (let i = 0; i < 7; i++) drawIcon(i);
 }
 
+function lerp(a: number, b: number, t: number) {
+	return a + (b - a) * t;
+}
+
+function lerpRect(a: Rect, b: Rect, t: number): Rect {
+	return [
+		lerp(a[0], b[0], t),
+		lerp(a[1], b[1], t),
+		lerp(a[2], b[2], t),
+		lerp(a[3], b[3], t),
+	];
+}
+
+function drawSwitch(center: Vec2, state: number) {
+	const t = Math.max(0, Math.min(1, state));
+
+	const body = [
+		[10, -25, 120, 50], // off
+		[10, -25, 120, 50],
+		[10, -25, 120, 50],
+		[10, -25, 120, 50],
+		[10, -25, 120, 50], // on
+	] as Rect[];
+
+	const button = [
+		[15, -20, 70, 40],   // off
+		[-5, -40, 110, 80],  // drag off
+		[15, -40, 110, 80],  // middle
+		[35, -40, 110, 80],  // drag on
+		[55, -20, 70, 40],   // on
+	] as Rect[];
+
+	const bodyColor = [
+		[0.5, 0.5, 0.5, 0.5] as RGBA,
+		[0.5, 0.5, 0.5, 0.5] as RGBA,
+		mix([0.5, 0.5, 0.5, 0.5] as RGBA, green, 0.5),
+		green,
+		green,
+	];
+
+	// --- segment selection ---
+	const seg = Math.min(3, Math.floor(t * 4));
+	const localT = (t - seg * 0.25) / 0.25;
+
+	// --- interpolate ---
+	const bRect = lerpRect(body[seg], body[seg + 1], localT);
+	const btnRect = lerpRect(button[seg], button[seg + 1], localT);
+
+	const bColor = mix(bodyColor[seg], bodyColor[seg + 1], localT);
+
+	// --- offset to center ---
+	function offset(r: Rect): Rect {
+		return [
+			center[0] + r[0],
+			center[1] + r[1],
+			r[2],
+			r[3],
+		];
+	}
+
+	// --- draw ---
+	squircle(offset(bRect), 25, 2, [0.5, 0.5, 0.5, 0.5], bColor);
+
+	// button shape morph (radius also interpolates)
+	const radius = lerp(
+		seg === 0 || seg === 4 ? 20 : 35,
+		seg + 1 === 4 || seg + 1 === 0 ? 20 : 35,
+		localT
+	);
+
+	const finalRect = offset(btnRect);
+	glass(finalRect, finalRect[3] / 2, 2, mix(glassAlbedo, black, Math.pow(Math.abs(state * 2 - 1), 4)), mix(glassEmission, white, Math.pow(Math.abs(state * 2 - 1), 4)), Shader.screen, Shader.screen, 16 * Math.pow(Math.abs(state * 2 - 1), 4));
+}
+
 function animate () {
 	if (!shouldDraw) {
 		Shader.clear(Shader.screen); // Keep the GPU minimally busy so there's no spinup on change
@@ -74,7 +149,7 @@ function animate () {
 	Shader.clear(Shader.bs);
 
 	//wallpaper
-	none(Shader.fullscreen, wallpaper, Shader.screen, true);
+	none(Shader.fullscreen, wallpaper, Shader.screen, false);
 	
 	
 	// bar
@@ -86,12 +161,15 @@ function animate () {
 	// window
 	widget.draw();
 	glass([500, 300, 200, 200], 100, 2);
+	glass([500, 300, 1000, 1000], 500, 2);
 	
 	// bar
 	drawBar(0);
 
 	// dock
 	drawDock();
+
+	drawSwitch([300, 100], (Math.sin(Date.now() / 1000) + 1) / 2);
 
 	// mouse
 	glass([Pointer.position[0] - 24, Pointer.position[1] - 24, 48, 48], 24, 2, mix(glassAlbedo, black, 0.5), glassEmission);
@@ -112,8 +190,8 @@ setInterval(() => {
 animate();
 
 const onMouseMove = (e: MouseEvent) => {
-	const dx = e.movementX / Math.PI;
-	const dy = -e.movementY / Math.PI;
+	const dx = e.movementX;
+	const dy = -e.movementY;
 	
 	Pointer.position[0] = Math.min(Shader.canvas.width, Math.max(0, Pointer.position[0] + dx));
 	Pointer.position[1] = Math.min(Shader.canvas.height, Math.max(0, Pointer.position[1] + dy));
