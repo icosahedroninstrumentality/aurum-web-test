@@ -73,7 +73,7 @@ void main () {
 
 	float radiusfix = max(1.0, 1.5 * log(radius)); // fix for large radius object
 
-	float curvature = pow(r_, 4.0 + 1.0 / power + 300.0 * min(1.0 / rect.z, 1.0 / rect.w));
+	float curvature = pow(r_, 5.0 + 1.0 / power + radius * 0.05);
 
 	vec2 offset = dir_ * curvature // curve function
 	/ resolution.xy * 16.0 // CHILL OUT
@@ -81,14 +81,16 @@ void main () {
 	
 	vec4 refracted = vec4(0.0);
 	vec4 reflected = vec4(0.0);
+
+	float abberation = 1.5;
 	
-	refracted.r = safeSample(blur, uv - offset / 1.1).r;
+	refracted.r = safeSample(blur, uv - offset * abberation).r;
 	refracted.g = safeSample(blur, uv - offset).g;
-	refracted.b = safeSample(blur, uv - offset * 1.1).b;
+	refracted.b = safeSample(blur, uv - offset / abberation).b;
 	
-	reflected.r = safeSample(blur, uv + offset * 0.2 / 1.2).r;
-	reflected.g = safeSample(blur, uv + offset * 0.2).g;
-	reflected.b = safeSample(blur, uv + offset * 0.2 * 1.2).b;
+	reflected.r = safeSample(blur, uv + (offset * 0.2) * abberation).r;
+	reflected.g = safeSample(blur, uv + (offset * 0.2)).g;
+	reflected.b = safeSample(blur, uv + (offset * 0.2) / abberation).b;
 	
 	refracted.a = 1.0;
 
