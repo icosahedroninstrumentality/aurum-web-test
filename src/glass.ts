@@ -44,7 +44,10 @@ vec2 va (vec2 a, vec2 r) {
 }
 
 float calculateInside (vec2 Sposition, vec4 Srect, vec2 Sc, float Spower) {
-	return pow(abs(max(abs((2.0 * Sposition.x - (2.0 * Srect.x + Srect.z)) / Srect.z) - (1.0 - Sc.x), 0.0) / Sc.x), Spower) + pow(abs(max(abs((2.0 * Sposition.y - (2.0 * Srect.y + Srect.w)) / Srect.w) - (1.0 - Sc.y), 0.0) / Sc.y), Spower);
+	return
+		pow(abs(max(abs((2.0 * Sposition.x - (2.0 * Srect.x + Srect.z)) / Srect.z) - (1.0 - Sc.x), 0.0) / Sc.x), Spower)
+		+
+		pow(abs(max(abs((2.0 * Sposition.y - (2.0 * Srect.y + Srect.w)) / Srect.w) - (1.0 - Sc.y), 0.0) / Sc.y), Spower);
 }
 
 void main () {

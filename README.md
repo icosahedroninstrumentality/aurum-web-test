@@ -1,5 +1,7 @@
 # aurum-web-test
 
+### This project is deprecated! The new version is [here](https://github.com/icosahedroninstrumentality/bismuth-linux)!
+
 This is a simple demo project of Our Liquid Glass demo. This is a portable glsl shader that can be embedded in basically any WebGL or OpenGL project.
 
 Currently the only shape supported is a parametric superellipse that We searched the formula for, it is directly shown in the `calculateInside` function of the glass shader.
